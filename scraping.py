@@ -6,7 +6,7 @@ import pandas as pd
 import datetime as dt
 
 def scrape_all():
-    # Set up Splinter
+    # Initiate headless driver for deployment
     executable_path = {'executable_path': ChromeDriverManager().install()}
     browser = Browser('chrome', **executable_path, headless=True)
 
@@ -31,7 +31,7 @@ def mars_news(browser):
     browser.visit(url)
     # Optional delay for loading the page
     browser.is_element_present_by_css('div.list_text', wait_time=1)
-
+    #Convert the browswer HTML to a soup object and then quit the browswer
     html = browser.html
     news_soup = soup(html, 'html.parser')
     
@@ -73,8 +73,8 @@ def featured_image(browser):
     except AttributeError:
         return None
 
-        # Use the base URL to create an absolute URL
-        img_url = f'https://spaceimages-mars.com/{img_url_rel}'
+    # Use the base URL to create an absolute URL
+    img_url = f'https://spaceimages-mars.com/{img_url_rel}'
     
     return img_url
 
@@ -87,10 +87,12 @@ def mars_facts():
     except BaseException:
         return None
     # assign colums and set index for the dataframe
-    df.columns=['description', 'Mars', 'Earth']
-    df.set_index('description', inplace=True)
+    df.columns=['Description', 'Mars', 'Earth']
+    df.set_index('Description', inplace=True)
    
     # convert dataframe to HTML format, and bootstrap
     return df.to_html()
 
-browser.quit()
+if __name__ == "__main__":
+    #If running as a script, print scraped data
+    print(scrape_all())
